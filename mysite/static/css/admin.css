@@ -1,0 +1,12 @@
+h1, a:link, a:visited, #content-related h3, #content-related .module h2 { color: green}
+
+#header , #branding h1 a:link, #branding h1 a:visited,
+ .module h2, .module caption, .inline-group h2{
+    background: #f44336;
+    color: #fff;
+}
+
+.quiet, a.quiet:link, a.quiet:visited{color:red;}
+
+div.breadcrumbs{background: #b71c1c;}
+tr:nth-child(even), tr:nth-child(even) .errorlist, tr:nth-child(odd) + .row-form-errors, tr:nth-child(odd) + .row-form-errors .errorlist, thead th.sorted, #toolbar{background: palegoldenrod}
