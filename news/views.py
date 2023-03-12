@@ -5,11 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth import login, logout
-
+from django.core.mail import send_mail
 
 from .models import News, Category
-from .forms import NewsForm, UserRegisterForm, UserLoginForm
+from .forms import NewsForm, UserRegisterForm, UserLoginForm, ContactForm
 from .utils import MyMixin
+
 
 def register(request):
     if request.method == 'POST':
@@ -25,6 +26,7 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'news/register.html', {"form": form})
 
+
 def user_login(request):
     if request.method == "POST":
         form = UserLoginForm(data=request.POST)
@@ -36,16 +38,29 @@ def user_login(request):
         form = UserLoginForm()
     return render(request, 'news/login.html', {"form": form})
 
+
 def user_logout(request):
     logout(request)
     return redirect('login')
 
-def test(request):
-    objects = ['john1','paul2','george3','ringo4','john5','paul6','george7','ringo8','john9','paul10','george11']
-    paginator = Paginator(objects, 2)
-    page_num = request.GET.get('page', 1)
-    page_objects = paginator.get_page(page_num)
-    return render(request, 'news/test.html', {'page_obj': page_objects})
+
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], 'a.peancovschii@gmail.com',
+                             ['kinesys@mail.ru'], fail_silently=True)
+            if mail:
+                messages.success(request, 'Письмо отправленно!')
+                return redirect('contact_us')
+            else:
+                messages.error(request, 'Ошибка отрпавки')
+        else:
+            messages.error(request, 'Ошибка блягь, формачка не валидна')
+    else:
+        form = ContactForm()
+    return render(request, 'news/contact_us.html', {'form': form})
+
 
 class HomeNews(MyMixin, ListView):
     model = News
@@ -93,7 +108,6 @@ class CreateNews(LoginRequiredMixin, CreateView):
     # raise_exception = True
     login_url = '/'
     # success_url = reverse_lazy('home')
-
 
 # def index(request):
 #     news = News.objects.all()
