@@ -56,7 +56,7 @@ def contact_us(request):
             else:
                 messages.error(request, 'Ошибка отрпавки')
         else:
-            messages.error(request, 'Ошибка блягь, формачка не валидна')
+            messages.error(request, 'Вы вфели не праффильные букфы')
     else:
         form = ContactForm()
     return render(request, 'news/contact_us.html', {'form': form})
